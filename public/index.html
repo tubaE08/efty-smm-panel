@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Efty Smm panel</title>
+  <style>
+    :root {
+      --navy: #162032;
+      --navy-hover: #0f172a;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --border: #d8dee9;
+      --text: #162032;
+      --muted: #5c677d;
+      --green: #16a34a;
+      --red: #dc2626;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .nav-wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.3px;
+    }
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .nav-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .container { max-width: 1120px; margin: 22px auto; padding: 0 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(22, 32, 50, 0.04);
+    }
+    h1, h2, h3 { margin-top: 0; color: var(--navy); }
+    .muted { color: var(--muted); font-size: 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 18px; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+    .stat {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .stat-num { font-size: 22px; font-weight: 800; color: var(--navy); margin-top: 4px; }
+    .field { margin-bottom: 12px; }
+    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--navy); }
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      color: var(--text);
+    }
+    input:focus, select:focus, textarea:focus { outline: 2px solid var(--navy); border-color: var(--navy); }
+    button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--navy);
+      background: var(--navy);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: var(--navy-hover); }
+    .btn-outline { background: #fff; color: var(--navy); }
+    .btn-outline:hover { background: #f1f5f9; }
+    .btn-green { background: var(--green); border-color: var(--green); }
+    .btn-red { background: var(--red); border-color: var(--red); }
+    .flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .msg { margin-top: 10px; font-size: 13px; font-weight: 600; }
+    .ok { color: var(--green); }
+    .err { color: var(--red); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    th, td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; }
+    th { background: #f8fafc; color: var(--muted); }
+    .pill { padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-block; }
+    .pending { background: #fef3c7; color: #92400e; }
+    .approved { background: #dcfce7; color: #166534; }
+    .rejected { background: #fee2e2; color: #991b1b; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 12px; }
+    .hidden { display: none; }
+    .balance-box { font-size: 24px; font-weight: 800; color: var(--green); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-wrap">
+      <div class="brand">
+        <div class="logo-mark">E</div>
+        <span>Efty Smm panel</span>
+      </div>
+      <div class="nav-btns">
+        <button class="btn-outline" onclick="switchView('auth')">Sign In / Sign Up</button>
+        <button class="btn-outline" onclick="switchView('user')">User Panel</button>
+        <button class="btn-outline" onclick="switchView('admin')">Admin Panel</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- AUTH VIEW: Access Key Sign In + Sign Up -->
+    <div id="view-auth" class="grid-2">
+      <div class="card">
+        <h2>Sign in with Access Key</h2>
+        <p class="muted">অ্যাডমিন আপনার অ্যাকাউন্ট Approve করে যে Access Key দিয়েছেন, সেটি দিয়ে লগইন করুন।</p>
+        <div class="field">
+          <label>Access Key</label>
+          <input type="text" id="loginKeyInput" placeholder="EFTY-XXXXXXXX" />
+        </div>
+        <button onclick="loginWithKey()">Sign in</button>
+        <div id="loginMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Create Account (Sign up)</h2>
+        <p class="muted">অ্যাকাউন্ট তৈরি করলে রিকোয়েস্ট Pending থাকবে। অ্যাডমিন Access Key জেনারেট করে Approve করলে আপনি Key পাবেন।</p>
+        <div class="field">
+          <label>Your Name</label>
+          <input type="text" id="signupName" placeholder="আপনার নাম" />
+        </div>
+        <div class="field">
+          <label>Email or Phone</label>
+          <input type="text" id="signupContact" placeholder="example@mail.com or 01XXXXXXXXX" />
+        </div>
+        <button class="btn-outline" onclick="signupUser()">Request Account</button>
+        <div id="signupMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- USER PANEL VIEW -->
+    <div id="view-user" class="hidden">
+      <div class="card flex" style="justify-content:space-between">
+        <div>
+          <h2 style="margin-bottom:4px">Welcome, <span id="uName">User</span></h2>
+          <div class="muted">Access Key: <strong id="uKey">-</strong> | Contact: <span id="uContact">-</span></div>
+        </div>
+        <div class="flex">
+          <div>
+            <div class="muted">Balance</div>
+            <div class="balance-box" id="uBalance">0.00</div>
+          </div>
+          <button class="btn-outline" onclick="loadUserDashboard()">Refresh</button>
+          <button class="btn-red" onclick="logoutUser()">Logout</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h2>New Order</h2>
+          <div class="field">
+            <label>Search Service</label>
+            <input type="text" id="srvSearch" placeholder="Service name or ID..." oninput="renderServices()" />
+          </div>
+          <div class="field">
+            <label>Service</label>
+            <select id="srvSelect" onchange="onServiceSelect()"></select>
+          </div>
+          <div id="srvMeta" class="muted" style="margin-bottom:10px"></div>
+          <div class="field">
+            <label>Link / Username</label>
+            <input type="text" id="ordLink" placeholder="https://example.com/post" />
+          </div>
+          <div class="field">
+            <label>Quantity</label>
+            <input type="number" id="ordQty" placeholder="100" oninput="calcEst()" />
+          </div>
+          <div class="field">
+            <label>Extra Parameters (Optional: comments, runs, interval, keywords, country, etc. — key=value per line)</label>
+            <textarea id="ordExtra" rows="3" placeholder="runs=2&#10;interval=5"></textarea>
+          </div>
+          <p>Charge: <strong id="ordEst">0.0000</strong></p>
+          <button onclick="submitOrder()">Place Order</button>
+          <pre id="ordResult" class="hidden"></pre>
+        </div>
+
+        <div class="card">
+          <h2>bKash Deposit</h2>
+          <p class="muted">Send Money করুন এই bKash নম্বরে: <strong id="bkashShow">01985060380</strong></p>
+          <div class="field">
+            <label>Amount</label>
+            <input type="number" step="0.01" id="depAmt" placeholder="100" />
+          </div>
+          <div class="field">
+            <label>bKash Transaction ID (TrxID)</label>
+            <input type="text" id="depTrx" placeholder="8N7F6D5S4A" />
+          </div>
+          <button class="btn-green" onclick="submitDeposit()">Submit TrxID</button>
+          <div id="depMsg" class="msg"></div>
+
+          <h3 style="margin-top:22px">Order Tools (Status / Refill / Cancel)</h3>
+          <div class="field">
+            <label>Order ID or Comma-separated IDs</label>
+            <input type="text" id="toolTarget" placeholder="101 or 101,102" />
+          </div>
+          <div class="flex">
+            <button class="btn-outline" onclick="runSmmTool('status')">Status</button>
+            <button class="btn-outline" onclick="runSmmTool('multiStatus')">Multi Status</button>
+            <button class="btn-outline" onclick="runSmmTool('refill')">Refill</button>
+            <button class="btn-outline" onclick="runSmmTool('cancel')">Cancel</button>
+          </div>
+          <pre id="toolOut" class="hidden"></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>My Orders</h2>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>#</th><th>SMM Order ID</th><th>Service</th><th>Link</th><th>Qty</th><th>Charge</th><th>Status</th></tr></thead>
+            <tbody id="uOrdersBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>My bKash Deposits</h2>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>#</th><th>TrxID</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody id="uDepositsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL VIEW -->
+    <div id="view-admin" class="hidden">
+      <div id="adminLoginBox" class="card">
+        <h2>Admin Panel Login</h2>
+        <p class="muted">অ্যাডমিন সিক্রেট কী দিয়ে লগইন করে ইউজারদের Access Key Approve করুন এবং bKash TrxID যাচাই করুন।</p>
+        <div class="flex">
+          <input type="password" id="adminSecretInput" placeholder="Admin Secret" style="max-width:280px" />
+          <button onclick="loginAdmin()">Login Admin</button>
+        </div>
+        <div id="adminLoginMsg" class="msg err"></div>
+      </div>
+
+      <div id="adminDashBox" class="hidden">
+        <div class="card">
+          <div class="flex" style="justify-content:space-between">
+            <div>
+              <h2 style="margin-bottom:4px">Efty Smm panel — Admin</h2>
+              <div class="muted">bKash Number: <strong id="admBkash">01985060380</strong></div>
+            </div>
+            <div class="flex">
+              <button class="btn-outline" onclick="loadAdminDash()">Refresh</button>
+              <button class="btn-red" onclick="logoutAdmin()">Logout</button>
+            </div>
+          </div>
+
+          <div class="stats" style="margin-top:14px">
+            <div class="stat"><div class="muted">MiniSMM Balance</div><div class="stat-num" id="admApiBal">-</div></div>
+            <div class="stat"><div class="muted">Total Users</div><div class="stat-num" id="admUsersCount">0</div></div>
+            <div class="stat"><div class="muted">Pending bKash</div><div class="stat-num" id="admPendingPay">0</div></div>
+            <div class="stat"><div class="muted">Total Orders</div><div class="stat-num" id="admOrdersCount">0</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Users & Access Key Approval</h2>
+          <div class="muted">Approve চাপলে অটোমেটিক Access Key জেনারেট হবে—সেই Key ইউজারকে দিলে তিনি Sign In করতে পারবেন।</div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Name</th><th>Contact</th><th>Access Key</th><th>Status</th><th>Balance</th><th>Action</th></tr>
+              </thead>
+              <tbody id="admUsersBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Manual Balance Add / Deduct</h2>
+          <div class="flex">
+            <input type="number" id="admBalUserId" placeholder="User ID (e.g. 1)" style="max-width:180px" />
+            <input type="number" step="0.01" id="admBalAmt" placeholder="Amount (e.g. 100 or -20)" style="max-width:220px" />
+            <button class="btn-green" onclick="adminAdjustBalance()">Update Balance</button>
+          </div>
+          <div id="admBalMsg" class="msg"></div>
+        </div>
+
+        <div class="card">
+          <h2>bKash TrxID Verification</h2>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr><th>#</th><th>User</th><th>TrxID</th><th>Amount</th><th>Status</th><th>Action</th></tr>
+              </thead>
+              <tbody id="admPaymentsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>All Orders</h2>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr><th>#</th><th>SMM ID</th><th>User</th><th>Service</th><th>Qty</th><th>Charge</th></tr>
+              </thead>
+              <tbody id="admOrdersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let userKey = localStorage.getItem('efty_user_key') || '';
+    let adminSecret = sessionStorage.getItem('efty_admin_secret') || '';
+    let servicesCache = [];
+
+    function switchView(name) {
+      ['auth', 'user', 'admin'].forEach((v) => {
+        document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
+      });
+      if (name === 'user') {
+        if (!userKey) return switchView('auth');
+        loadUserDashboard();
+      }
+      if (name === 'admin') {
+        if (adminSecret) loadAdminDash();
+      }
+    }
+
+    async function ensureServicesLoaded() {
+      if (servicesCache.length) return;
+      const res = await fetch('/api/services');
+      const data = await res.json();
+      if (data.ok && Array.isArray(data.services)) {
+        servicesCache = data.services;
+        renderServices();
+      }
+    }
+
+    function renderServices() {
+      const q = document.getElementById('srvSearch').value.trim().toLowerCase();
+      const filtered = q
+        ? servicesCache.filter((s) => String(s.service).includes(q) || String(s.name || '').toLowerCase().includes(q))
+        : servicesCache.slice(0, 120);
+
+      const sel = document.getElementById('srvSelect');
+      sel.innerHTML = filtered
+        .map((s) => `<option value="${s.service}">#${s.service} — ${s.name} (${s.user_rate}/1k)</option>`)
+        .join('');
+      onServiceSelect();
+    }
+
+    function getSelectedService() {
+      const id = Number(document.getElementById('srvSelect').value);
+      return servicesCache.find((s) => Number(s.service) === id);
+    }
+
+    function onServiceSelect() {
+      const s = getSelectedService();
+      document.getElementById('srvMeta').textContent = s
+        ? `Rate/1k: ${s.user_rate} | Min: ${s.min} | Max: ${s.max} | Type: ${s.type || 'Default'}`
+        : '';
+      calcEst();
+    }
+
+    function calcEst() {
+      const s = getSelectedService();
+      const qty = Number(document.getElementById('ordQty').value || 0);
+      if (!s) return (document.getElementById('ordEst').textContent = '0.0000');
+      const cost = s.type === 'Package' ? Number(s.user_rate) : (Number(s.user_rate) / 1000) * qty;
+      document.getElementById('ordEst').textContent = cost.toFixed(4);
+    }
+
+    async function signupUser() {
+      const name = document.getElementById('signupName').value.trim();
+      const emailOrPhone = document.getElementById('signupContact').value.trim();
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, emailOrPhone }),
+      });
+      const data = await res.json();
+      const el = document.getElementById('signupMsg');
+      el.className = 'msg ' + (data.ok ? 'ok' : 'err');
+      el.textContent = data.message || data.error;
+      if (data.ok) {
+        document.getElementById('signupName').value = '';
+        document.getElementById('signupContact').value = '';
+      }
+    }
+
+    async function loginWithKey() {
+      const key = document.getElementById('loginKeyInput').value.trim().toUpperCase();
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessKey: key }),
+      });
+      const data = await res.json();
+      const el = document.getElementById('loginMsg');
+      if (!data.ok) {
+        el.className = 'msg err';
+        el.textContent = data.error;
+        return;
+      }
+      userKey = key;
+      localStorage.setItem('efty_user_key', userKey);
+      el.textContent = '';
+      switchView('user');
+    }
+
+    function logoutUser() {
+      userKey = '';
+      localStorage.removeItem('efty_user_key');
+      switchView('auth');
+    }
+
+    async function loadUserDashboard() {
+      await ensureServicesLoaded();
+      const res = await fetch(`/api/user/dashboard?accessKey=${encodeURIComponent(userKey)}`);
+      const data = await res.json();
+      if (!data.ok) {
+        logoutUser();
+        return;
+      }
+      document.getElementById('uName').textContent = data.user.name;
+      document.getElementById('uKey').textContent = userKey;
+      document.getElementById('uContact').textContent = data.user.contact;
+      document.getElementById('uBalance').textContent = Number(data.user.balance).toFixed(2);
+      document.getElementById('bkashShow').textContent = data.bkashNumber || '01985060380';
+
+      document.getElementById('uOrdersBody').innerHTML = (data.orders || [])
+        .map((o) => `<tr><td>#${o.id}</td><td>${o.smmOrderId}</td><td>${o.serviceId}</td><td>${o.link}</td><td>${o.quantity || '-'}</td><td>${o.charge}</td><td>${o.status}</td></tr>`)
+        .join('') || '<tr><td colspan="7">No orders yet</td></tr>';
+
+      document.getElementById('uDepositsBody').innerHTML = (data.payments || [])
+        .map((p) => `<tr><td>#${p.id}</td><td><strong>${p.trxId}</strong></td><td>${p.amount}</td><td><span class="pill ${p.status}">${p.status}</span></td></tr>`)
+        .join('') || '<tr><td colspan="4">No deposits yet</td></tr>';
+    }
+
+    async function submitOrder() {
+      const s = getSelectedService();
+      if (!s) return;
+      const orderPayload = {
+        service: Number(s.service),
+        link: document.getElementById('ordLink').value.trim(),
+      };
+      const qtyVal = document.getElementById('ordQty').value.trim();
+      if (qtyVal) orderPayload.quantity = Number(qtyVal);
+
+      const lines = document.getElementById('ordExtra').value.split('\n').map((l) => l.trim()).filter(Boolean);
+      for (const line of lines) {
+        const idx = line.indexOf('=');
+        if (idx > -1) {
+          const k = line.slice(0, idx).trim();
+          const v = line.slice(idx + 1).trim().replace(/\\n/g, '\n');
+          orderPayload[k] = Number.isNaN(Number(v)) ? v : Number(v);
+        }
+      }
+
+      const res = await fetch('/api/user/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessKey: userKey, orderPayload }),
+      });
+      const data = await res.json();
+      const pre = document.getElementById('ordResult');
+      pre.classList.remove('hidden');
+      pre.textContent = JSON.stringify(data, null, 2);
+      if (data.ok) await loadUserDashboard();
+    }
+
+    async function submitDeposit() {
+      const amount = document.getElementById('depAmt').value.trim();
+      const trxId = document.getElementById('depTrx').value.trim();
+      const res = await fetch('/api/user/deposit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessKey: userKey, amount, trxId }),
+      });
+      const data = await res.json();
+      const el = document.getElementById('depMsg');
+      el.className = 'msg ' + (data.ok ? 'ok' : 'err');
+      el.textContent = data.ok ? 'TrxID জমা হয়েছে। অ্যাডমিন ভেরিফাই করলে ব্যালেন্স অ্যাড হবে।' : data.error;
+      if (data.ok) {
+        document.getElementById('depAmt').value = '';
+        document.getElementById('depTrx').value = '';
+        await loadUserDashboard();
+      }
+    }
+
+    async function runSmmTool(smmAction) {
+      const target = document.getElementById('toolTarget').value.trim();
+      const res = await fetch('/api/smm/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessKey: userKey, smmAction, target }),
+      });
+      const data = await res.json();
+      const pre = document.getElementById('toolOut');
+      pre.classList.remove('hidden');
+      pre.textContent = JSON.stringify(data.data || data, null, 2);
+    }
+
+    // Admin functions
+    function loginAdmin() {
+      const val = document.getElementById('adminSecretInput').value.trim();
+      if (!val) return;
+      adminSecret = val;
+      sessionStorage.setItem('efty_admin_secret', adminSecret);
+      loadAdminDash();
+    }
+
+    function logoutAdmin() {
+      adminSecret = '';
+      sessionStorage.removeItem('efty_admin_secret');
+      document.getElementById('adminDashBox').classList.add('hidden');
+      document.getElementById('adminLoginBox').classList.remove('hidden');
+    }
+
+    async function loadAdminDash() {
+      const res = await fetch('/api/admin/dashboard', {
+        headers: { 'x-admin-secret': adminSecret },
+      });
+      if (res.status === 401) {
+        logoutAdmin();
+        document.getElementById('adminLoginMsg').textContent = 'ভুল Admin Secret!';
+        return;
+      }
+      const data = await res.json();
+      if (!data.ok) return;
+
+      document.getElementById('adminLoginBox').classList.add('hidden');
+      document.getElementById('adminDashBox').classList.remove('hidden');
+      document.getElementById('admBkash').textContent = data.bkashNumber || '01985060380';
+      document.getElementById('admApiBal').textContent = `${data.providerBalance?.balance ?? 'N/A'} ${data.providerBalance?.currency || ''}`;
+
+      const users = data.users || [];
+      const payments = data.payments || [];
+      const orders = data.orders || [];
+
+      document.getElementById('admUsersCount').textContent = users.length;
+      document.getElementById('admPendingPay').textContent = payments.filter((p) => p.status === 'pending').length;
+      document.getElementById('admOrdersCount').textContent = orders.length;
+
+      document.getElementById('admUsersBody').innerHTML = users
+        .map(
+          (u) => `<tr>
+            <td>#${u.id}</td>
+            <td>${u.name}</td>
+            <td>${u.contact}</td>
+            <td><strong>${u.accessKey || '-'}</strong></td>
+            <td><span class="pill ${u.approved ? 'approved' : 'pending'}">${u.approved ? 'approved' : 'pending'}</span></td>
+            <td><strong>${Number(u.balance || 0).toFixed(2)}</strong></td>
+            <td class="flex">
+              <button class="btn-green" onclick="approveUser(${u.id})">Generate Key & Approve</button>
+              ${u.approved ? `<button class="btn-red" onclick="revokeUser(${u.id})">Revoke</button>` : ''}
+            </td>
+          </tr>`
+        )
+        .join('') || '<tr><td colspan="7">No users</td></tr>';
+
+      document.getElementById('admPaymentsBody').innerHTML = payments
+        .map(
+          (p) => `<tr>
+            <td>#${p.id}</td>
+            <td>${p.userName || p.userId} (#${p.userId})</td>
+            <td><strong>${p.trxId}</strong></td>
+            <td>${p.amount}</td>
+            <td><span class="pill ${p.status}">${p.status}</span></td>
+            <td>
+              ${p.status === 'pending'
+                ? `<div class="flex">
+                    <button class="btn-green" onclick="decidePayment(${p.id}, 'approve')">Approve</button>
+                    <button class="btn-red" onclick="decidePayment(${p.id}, 'reject')">Reject</button>
+                   </div>`
+                : '-'}
+            </td>
+          </tr>`
+        )
+        .join('') || '<tr><td colspan="6">No deposits</td></tr>';
+
+      document.getElementById('admOrdersBody').innerHTML = orders
+        .map(
+          (o) => `<tr>
+            <td>#${o.id}</td>
+            <td>${o.smmOrderId}</td>
+            <td>${o.userName || o.userId} (#${o.userId})</td>
+            <td>${o.serviceId}</td>
+            <td>${o.quantity || '-'}</td>
+            <td>${o.charge}</td>
+          </tr>`
+        )
+        .join('') || '<tr><td colspan="6">No orders</td></tr>';
+    }
+
+    async function approveUser(userId) {
+      const res = await fetch('/api/admin/approve-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        alert(`Approved! Access Key: ${data.user.accessKey}`);
+        await loadAdminDash();
+      }
+    }
+
+    async function revokeUser(userId) {
+      await fetch('/api/admin/revoke-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
+        body: JSON.stringify({ userId }),
+      });
+      await loadAdminDash();
+    }
+
+    async function adminAdjustBalance() {
+      const userId = document.getElementById('admBalUserId').value.trim();
+      const amount = document.getElementById('admBalAmt').value.trim();
+      const res = await fetch('/api/admin/add-balance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
+        body: JSON.stringify({ userId, amount }),
+      });
+      const data = await res.json();
+      const el = document.getElementById('admBalMsg');
+      el.className = 'msg ' + (data.ok ? 'ok' : 'err');
+      el.textContent = data.ok ? `Updated! New Balance: ${data.user.balance}` : data.error;
+      if (data.ok) await loadAdminDash();
+    }
+
+    async function decidePayment(paymentId, decision) {
+      const res = await fetch('/api/admin/payment-decision', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
+        body: JSON.stringify({ paymentId, decision }),
+      });
+      const data = await res.json();
+      if (!data.ok) return alert(data.error);
+      await loadAdminDash();
+    }
+
+    if (userKey) {
+      switchView('user');
+    } else {
+      switchView('auth');
+    }
+  </script>
+</body>
+</html>
